@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CV & Resume Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --main-color: #3498db;
+      --border-radius: 12px;
+      --gradient-bg: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      padding: 10px;
+    }
+
+    .container {
+      background: white;
+      max-width: 760px;
+      margin: auto;
+      padding: 0;
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .top-header {
+      background: var(--gradient-bg);
+      height: auto;
+      padding: 15px;
+      text-align: center;
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
+    }
+
+    .top-header h1 {
+      color: white;
+      font-size: 26px;
+      margin: 0;
+    }
+
+    .photo-upload {
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .photo-preview {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--main-color);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .upload-btn {
+      background: var(--main-color);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .highlight-box {
+      border: 2px solid var(--main-color);
+      padding: 6px 10px;
+      border-radius: var(--border-radius);
+      margin: 10px 15px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .btn-group {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .btn-group button {
+      background: var(--main-color);
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      margin: 5px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-group button:hover {
+      background: #2c80b4;
+    }
+
+    @media print {
+      .btn-group, .upload-btn {
+        display: none !important;
+      }
+      @page {
+        margin: 10mm;
+        size: A4;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="cvArea">
+  <div class="top-header">
+    <h1>CV & Resume</h1>
+  </div>
+
+  <div class="photo-upload">
+    <img id="preview" class="photo-preview" src="" alt="Upload Photo"/>
+    <br>
+    <input type="file" id="photoInput" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
+    <button class="upload-btn" onclick="document.getElementById('photoInput').click()">Upload Photo</button>
+  </div>
+
+  <div class="highlight-box"><label>Full Name</label><input type="text" id="name" /></div>
+  <div class="highlight-box"><label>Education</label><textarea id="education" rows="2"></textarea></div>
+  <div class="highlight-box"><label>Experience</label><textarea id="experience" rows="2"></textarea></div>
+  <div class="highlight-box"><label>Skills</label><input type="text" id="skills" /></div>
+  <div class="highlight-box"><label>Objective</label><textarea id="objective" rows="2"></textarea></div>
+  <div class="highlight-box"><label>Languages</label><input type="text" id="languages" /></div>
+  <div class="highlight-box"><label>Contact</label><input type="text" id="contact" /></div>
+  <div class="highlight-box"><label>Address</label><input type="text" id="address" /></div>
+  <div class="highlight-box"><label>Email</label><input type="email" id="email" /></div>
+</div>
+
+<div class="btn-group">
+  <button onclick="downloadPDF()">⬇️ Download PDF</button>
+  <button onclick="window.print()">🖨️ Print</button>
+</div>
+
+<script>
+  function loadPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      document.getElementById('preview').src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  function downloadPDF() {
+    const element = document.getElementById('cvArea');
+    const opt = {
+      margin: 0,
+      filename: 'My_CV_Resume.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+</script>
+
+</body>
+</html>
